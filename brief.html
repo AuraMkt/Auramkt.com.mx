@@ -1,0 +1,1195 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Brief — aura+</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Anton&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #07070f;
+    --surface: #0f0f1e;
+    --card: #13132a;
+    --border: rgba(123,92,255,0.18);
+    --purple: #7B5CFF;
+    --purple-light: #a48aff;
+    --pink: #e040fb;
+    --text: #e8e6f0;
+    --muted: #7a78a0;
+    --radius: 12px;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Outfit', sans-serif;
+    min-height: 100vh;
+    padding-bottom: 80px;
+  }
+
+  /* ── FONDO ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 50% at 20% 10%, rgba(123,92,255,0.12) 0%, transparent 70%),
+      radial-gradient(ellipse 50% 40% at 80% 80%, rgba(224,64,251,0.07) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .wrap {
+    position: relative;
+    z-index: 1;
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  /* ── HEADER ── */
+  header {
+    padding: 40px 0 32px;
+    text-align: center;
+  }
+
+  .logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: -0.5px;
+    color: var(--text);
+    text-decoration: none;
+  }
+
+  .logo svg { width: 20px; height: 20px; }
+
+  .header-sub {
+    margin-top: 20px;
+    font-size: 13px;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  /* ── PROGRESS ── */
+  .progress-wrap {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: rgba(7,7,15,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 20px;
+  }
+
+  .progress-inner {
+    max-width: 680px;
+    margin: 0 auto;
+  }
+
+  .progress-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  .progress-label strong { color: var(--purple-light); font-weight: 600; }
+
+  .progress-track {
+    height: 3px;
+    background: rgba(123,92,255,0.15);
+    border-radius: 99px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--purple), var(--pink));
+    border-radius: 99px;
+    transition: width 0.4s ease;
+  }
+
+  /* ── BLOQUES ── */
+  .block { display: none; padding: 32px 0 0; }
+  .block.active { display: block; }
+
+  .block-header { margin-bottom: 28px; }
+
+  .block-eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--purple-light);
+    margin-bottom: 8px;
+  }
+
+  .block-title {
+    font-family: 'Anton', sans-serif;
+    font-size: clamp(26px, 5vw, 34px);
+    letter-spacing: 0.5px;
+    line-height: 1.1;
+    color: var(--text);
+  }
+
+  .block-desc {
+    margin-top: 10px;
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  /* ── CAMPO ── */
+  .field { margin-bottom: 20px; }
+
+  label {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 7px;
+  }
+
+  label span {
+    color: var(--muted);
+    font-weight: 400;
+    font-size: 12px;
+  }
+
+  input[type=text],
+  input[type=tel],
+  input[type=email],
+  input[type=url],
+  textarea,
+  select {
+    width: 100%;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--text);
+    font-family: 'Outfit', sans-serif;
+    font-size: 15px;
+    padding: 13px 16px;
+    outline: none;
+    transition: border-color 0.2s;
+    -webkit-appearance: none;
+  }
+
+  input:focus, textarea:focus, select:focus {
+    border-color: var(--purple);
+    box-shadow: 0 0 0 3px rgba(123,92,255,0.12);
+  }
+
+  textarea { resize: vertical; min-height: 90px; }
+
+  select option { background: var(--card); }
+
+  /* ── CHECKBOXES / RADIOS ── */
+  .options-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .options-grid.cols-1 { grid-template-columns: 1fr; }
+  .options-grid.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+
+  .opt {
+    position: relative;
+  }
+
+  .opt input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+
+  .opt label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 12px 14px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--text);
+    transition: border-color 0.2s, background 0.2s;
+    margin: 0;
+  }
+
+  .opt input:checked + label {
+    border-color: var(--purple);
+    background: rgba(123,92,255,0.1);
+    color: var(--purple-light);
+  }
+
+  .opt label .opt-icon { font-size: 18px; }
+
+  /* ── SERVICIOS DINÁMICOS ── */
+  #servicios-list { margin-bottom: 10px; }
+
+  .servicio-item {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 8px;
+    align-items: center;
+  }
+
+  .servicio-item input { flex: 1; margin: 0; }
+
+  .btn-remove {
+    background: rgba(255,60,60,0.1);
+    border: 1px solid rgba(255,60,60,0.2);
+    color: #ff6060;
+    border-radius: 8px;
+    width: 36px;
+    height: 36px;
+    cursor: pointer;
+    font-size: 16px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+  }
+
+  .btn-remove:hover { background: rgba(255,60,60,0.2); }
+
+  .btn-add-service {
+    background: transparent;
+    border: 1px dashed var(--border);
+    border-radius: var(--radius);
+    color: var(--purple-light);
+    font-family: 'Outfit', sans-serif;
+    font-size: 13px;
+    padding: 10px 16px;
+    cursor: pointer;
+    width: 100%;
+    transition: border-color 0.2s, background 0.2s;
+  }
+
+  .btn-add-service:hover {
+    border-color: var(--purple);
+    background: rgba(123,92,255,0.06);
+  }
+
+  /* ── PALETA SELECTOR ── */
+  .palette-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+
+  .palette-opt {
+    position: relative;
+  }
+
+  .palette-opt input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+
+  .palette-opt label {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 12px 14px;
+    cursor: pointer;
+    transition: border-color 0.2s;
+    margin: 0;
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--text);
+  }
+
+  .palette-opt input:checked + label {
+    border-color: var(--purple);
+    background: rgba(123,92,255,0.08);
+  }
+
+  .palette-swatches {
+    display: flex;
+    gap: 4px;
+  }
+
+  .swatch {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* ── UPLOAD LOGO ── */
+  .upload-area {
+    border: 1.5px dashed var(--border);
+    border-radius: var(--radius);
+    padding: 28px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+    position: relative;
+  }
+
+  .upload-area:hover { border-color: var(--purple); background: rgba(123,92,255,0.04); }
+  .upload-area input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+  .upload-icon { font-size: 28px; margin-bottom: 8px; }
+  .upload-text { font-size: 13px; color: var(--muted); }
+  .upload-text strong { color: var(--purple-light); }
+  #logo-name { font-size: 12px; color: var(--purple-light); margin-top: 8px; }
+
+  /* ── DIVIDER ── */
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 24px 0;
+  }
+
+  /* ── HINT ── */
+  .hint {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 6px;
+    line-height: 1.5;
+  }
+
+  /* ── NAV BOTONES ── */
+  .nav-buttons {
+    display: flex;
+    gap: 12px;
+    margin-top: 40px;
+    padding-bottom: 20px;
+  }
+
+  .btn-prev {
+    flex: 0 0 auto;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--muted);
+    font-family: 'Outfit', sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    padding: 14px 22px;
+    cursor: pointer;
+    transition: border-color 0.2s, color 0.2s;
+  }
+
+  .btn-prev:hover { border-color: var(--purple); color: var(--text); }
+
+  .btn-next {
+    flex: 1;
+    background: linear-gradient(135deg, var(--purple), var(--pink));
+    border: none;
+    border-radius: var(--radius);
+    color: #fff;
+    font-family: 'Outfit', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    padding: 14px 28px;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.15s;
+  }
+
+  .btn-next:hover { opacity: 0.9; transform: translateY(-1px); }
+  .btn-next:active { transform: translateY(0); }
+  .btn-next:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+  /* ── SUCCESS ── */
+  #success {
+    display: none;
+    text-align: center;
+    padding: 60px 0;
+  }
+
+  .success-icon { font-size: 56px; margin-bottom: 20px; }
+
+  .success-title {
+    font-family: 'Anton', sans-serif;
+    font-size: 32px;
+    margin-bottom: 12px;
+  }
+
+  .success-desc {
+    color: var(--muted);
+    font-size: 15px;
+    line-height: 1.6;
+    max-width: 400px;
+    margin: 0 auto 32px;
+  }
+
+  .btn-wa {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: #25D366;
+    color: #fff;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 600;
+    font-size: 15px;
+    padding: 14px 28px;
+    border-radius: var(--radius);
+    text-decoration: none;
+    transition: opacity 0.2s;
+  }
+
+  .btn-wa:hover { opacity: 0.9; }
+
+  /* ── MOBILE ── */
+  @media (max-width: 480px) {
+    .options-grid { grid-template-columns: 1fr; }
+    .options-grid.cols-3 { grid-template-columns: 1fr 1fr; }
+    .palette-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- PROGRESS -->
+<div class="progress-wrap">
+  <div class="progress-inner">
+    <div class="progress-label">
+      <strong id="prog-label">Bloque 1 de 8</strong>
+      <span id="prog-pct">0%</span>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill" id="prog-fill" style="width:0%"></div>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <!-- HEADER -->
+  <header>
+    <a class="logo" href="#">
+      <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M10 0 L11.5 8.5 L20 10 L11.5 11.5 L10 20 L8.5 11.5 L0 10 L8.5 8.5 Z" fill="#7B5CFF"/>
+      </svg>
+      aura+
+    </a>
+    <div class="header-sub">Cuestionario de proyecto</div>
+  </header>
+
+  <!-- ══════════════════════════════════
+       BLOQUE 1 — IDENTIDAD
+  ══════════════════════════════════ -->
+  <div class="block active" id="block-1">
+    <div class="block-header">
+      <div class="block-eyebrow">01 — Identidad</div>
+      <div class="block-title">Cuéntanos sobre tu negocio</div>
+      <div class="block-desc">Primero lo básico — quién eres y dónde estás.</div>
+    </div>
+
+    <div class="field">
+      <label>¿Cuál es el nombre de tu negocio o despacho? <span>(Si trabajas con tu nombre, escríbelo como quieres que aparezca)</span></label>
+      <input type="text" id="nombre_negocio" placeholder="Ej: Despacho Ruiz Abogados">
+    </div>
+
+    <div class="field">
+      <label>¿A qué te dedicas exactamente?</label>
+      <input type="text" id="giro" placeholder="Ej: Soy abogado penalista, tengo una clínica dental...">
+    </div>
+
+    <div class="field">
+      <label>¿En qué ciudad y colonia trabajas?</label>
+      <input type="text" id="ciudad" placeholder="Ej: Monterrey, NL — Col. del Valle">
+    </div>
+
+    <div class="field">
+      <label>¿Ya tienes dominio o página web? <span>(opcional)</span></label>
+      <input type="text" id="dominio" placeholder="Ej: www.tunegocio.com — si no tienes, escribe 'no'">
+    </div>
+
+    <div class="field">
+      <label>¿Qué plan te interesa?</label>
+      <div class="options-grid">
+        <div class="opt">
+          <input type="radio" name="plan" id="plan_basic" value="Basic — $4,000 MXN">
+          <label for="plan_basic"><span class="opt-icon">⚡</span> Basic · $4,000</label>
+        </div>
+        <div class="opt">
+          <input type="radio" name="plan" id="plan_premium" value="Premium — $7,500 MXN">
+          <label for="plan_premium"><span class="opt-icon">✦</span> Premium · $7,500</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="nav-buttons">
+      <button class="btn-next" onclick="next()">Siguiente →</button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════
+       BLOQUE 2 — SERVICIOS
+  ══════════════════════════════════ -->
+  <div class="block" id="block-2">
+    <div class="block-header">
+      <div class="block-eyebrow">02 — Servicios</div>
+      <div class="block-title">¿Qué ofreces?</div>
+      <div class="block-desc">Agrega todos los servicios que quieres mostrar en tu página.</div>
+    </div>
+
+    <div class="field">
+      <label>Lista de servicios que ofreces</label>
+      <div id="servicios-list">
+        <div class="servicio-item"><input type="text" class="servicio-input" placeholder="Ej: Derecho familiar"></div>
+        <div class="servicio-item"><input type="text" class="servicio-input" placeholder="Ej: Amparos"></div>
+        <div class="servicio-item"><input type="text" class="servicio-input" placeholder="Ej: Derecho mercantil"></div>
+      </div>
+      <button class="btn-add-service" onclick="addServicio()">+ Agregar otro servicio</button>
+    </div>
+
+    <div class="field">
+      <label>¿En cuál te especializas más o quieres destacar?</label>
+      <input type="text" id="especialidad" placeholder="Ej: Derecho penal">
+    </div>
+
+    <div class="field">
+      <label>¿Qué te hace diferente a otros en tu área? <span>(no tiene que ser algo enorme)</span></label>
+      <textarea id="diferenciador" placeholder="Ej: Más de 15 años de experiencia, trato personalizado, respuesta en 24 horas..."></textarea>
+    </div>
+
+    <div class="field">
+      <label>¿A qué tipo de cliente le hablas principalmente?</label>
+      <input type="text" id="cliente_ideal" placeholder="Ej: Familias de clase media, empresas locales, mujeres de 30-50 años...">
+    </div>
+
+    <div class="field">
+      <label>¿Cuál es el principal problema o miedo que le resuelves a ese cliente?</label>
+      <textarea id="problema" placeholder="Ej: No saben cómo proteger su patrimonio, tienen miedo de no ver a sus hijos..."></textarea>
+    </div>
+
+    <div class="nav-buttons">
+      <button class="btn-prev" onclick="prev()">← Atrás</button>
+      <button class="btn-next" onclick="next()">Siguiente →</button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════
+       BLOQUE 3 — CREDIBILIDAD
+  ══════════════════════════════════ -->
+  <div class="block" id="block-3">
+    <div class="block-header">
+      <div class="block-eyebrow">03 — Credibilidad</div>
+      <div class="block-title">Tus números y logros</div>
+      <div class="block-desc">Esta información genera confianza inmediata en quien visita tu página.</div>
+    </div>
+
+    <div class="field">
+      <label>¿Cuántos años llevas ejerciendo?</label>
+      <input type="text" id="anos_exp" placeholder="Ej: 12 años">
+    </div>
+
+    <div class="field">
+      <label>¿Tienes algún número que impresione? <span>(opcional)</span></label>
+      <input type="text" id="estadistica1" placeholder="Ej: +200 casos resueltos, 500 clientes atendidos...">
+    </div>
+
+    <div class="field">
+      <label>¿Otro dato relevante? <span>(opcional)</span></label>
+      <input type="text" id="estadistica2" placeholder="Ej: 98% de satisfacción, miembro del Colegio de Abogados...">
+    </div>
+
+    <div class="field">
+      <label>¿Tienes algún logro, certificación o formación que te dé autoridad? <span>(opcional)</span></label>
+      <textarea id="logros" placeholder="Ej: Egresado del Tec de Monterrey, especialidad en derecho fiscal por la UNAM, certificado por..."></textarea>
+    </div>
+
+    <div class="field">
+      <label>¿Tienes testimonios de clientes satisfechos? <span>(opcional)</span></label>
+      <textarea id="testimonios" placeholder="Pega aquí el texto de 1 o 2 testimonios, o escribe 'no tengo' — también puedes mandarnos capturas de WhatsApp o Google Reviews después"></textarea>
+    </div>
+
+    <div class="nav-buttons">
+      <button class="btn-prev" onclick="prev()">← Atrás</button>
+      <button class="btn-next" onclick="next()">Siguiente →</button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════
+       BLOQUE 4 — CONTACTO
+  ══════════════════════════════════ -->
+  <div class="block" id="block-4">
+    <div class="block-header">
+      <div class="block-eyebrow">04 — Contacto</div>
+      <div class="block-title">¿Cómo te contactan?</div>
+      <div class="block-desc">Definimos cómo van a llegar los clientes desde tu página.</div>
+    </div>
+
+    <div class="field">
+      <label>Tu número de WhatsApp <span>(con lada, sin espacios)</span></label>
+      <input type="tel" id="whatsapp" placeholder="Ej: 8112345678">
+    </div>
+
+    <div class="field">
+      <label>Correo electrónico <span>(opcional)</span></label>
+      <input type="email" id="correo" placeholder="Ej: contacto@tunegocio.com">
+    </div>
+
+    <div class="field">
+      <label>¿Tienes redes sociales activas que quieras enlazar? <span>(selecciona las que uses de verdad)</span></label>
+      <div class="options-grid cols-3">
+        <div class="opt"><input type="checkbox" id="rs_ig" value="Instagram"><label for="rs_ig">📸 Instagram</label></div>
+        <div class="opt"><input type="checkbox" id="rs_fb" value="Facebook"><label for="rs_fb">👥 Facebook</label></div>
+        <div class="opt"><input type="checkbox" id="rs_li" value="LinkedIn"><label for="rs_li">💼 LinkedIn</label></div>
+        <div class="opt"><input type="checkbox" id="rs_tk" value="TikTok"><label for="rs_tk">🎵 TikTok</label></div>
+        <div class="opt"><input type="checkbox" id="rs_yt" value="YouTube"><label for="rs_yt">▶️ YouTube</label></div>
+        <div class="opt"><input type="checkbox" id="rs_none" value="Ninguna"><label for="rs_none">❌ Ninguna</label></div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>¿Cómo prefieres que te contacten desde la página?</label>
+      <div class="options-grid cols-1">
+        <div class="opt"><input type="radio" name="cta" id="cta_wa" value="Botón de WhatsApp directo"><label for="cta_wa">📲 Solo botón de WhatsApp</label></div>
+        <div class="opt"><input type="radio" name="cta" id="cta_form" value="Formulario de contacto"><label for="cta_form">📝 Solo formulario de contacto</label></div>
+        <div class="opt"><input type="radio" name="cta" id="cta_ambos" value="Ambos (WhatsApp y formulario)"><label for="cta_ambos">✅ Ambos</label></div>
+      </div>
+    </div>
+
+    <div class="nav-buttons">
+      <button class="btn-prev" onclick="prev()">← Atrás</button>
+      <button class="btn-next" onclick="next()">Siguiente →</button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════
+       BLOQUE 5 — IMAGEN Y ESTILO
+  ══════════════════════════════════ -->
+  <div class="block" id="block-5">
+    <div class="block-header">
+      <div class="block-eyebrow">05 — Imagen y estilo</div>
+      <div class="block-title">¿Cómo quieres verte?</div>
+      <div class="block-desc">Esta parte define la personalidad visual de tu página.</div>
+    </div>
+
+    <div class="field">
+      <label>Si tuvieras que describir tu página con 3 palabras, ¿cuáles serían?</label>
+      <input type="text" id="tres_palabras" placeholder="Ej: seria, elegante, confiable / cálida, moderna, cercana">
+    </div>
+
+    <div class="field">
+      <label>¿Prefieres un diseño oscuro o claro?</label>
+      <div class="options-grid">
+        <div class="opt">
+          <input type="radio" name="modo" id="modo_oscuro" value="Oscuro">
+          <label for="modo_oscuro">🌑 Oscuro<br><small style="color:var(--muted);font-size:11px">Fondos negros o muy oscuros</small></label>
+        </div>
+        <div class="opt">
+          <input type="radio" name="modo" id="modo_claro" value="Claro">
+          <label for="modo_claro">☀️ Claro<br><small style="color:var(--muted);font-size:11px">Fondos blancos o crema</small></label>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="field">
+      <label>¿Tienes colores definidos de tu marca?</label>
+      <div class="options-grid">
+        <div class="opt"><input type="radio" name="tiene_colores" id="col_si" value="Sí" onclick="toggleColores(true)"><label for="col_si">✅ Sí, tengo colores</label></div>
+        <div class="opt"><input type="radio" name="tiene_colores" id="col_no" value="No" onclick="toggleColores(false)"><label for="col_no">❌ No, necesito propuesta</label></div>
+      </div>
+    </div>
+
+    <div id="colores-si" style="display:none">
+      <div class="field">
+        <label>Escribe tus códigos HEX <span>(o describe los colores con palabras)</span></label>
+        <input type="text" id="colores_hex" placeholder="Ej: #1A2B5C #C9A84C  — o 'azul marino y dorado'">
+        <div class="hint">Puedes obtener los códigos desde Canva, o busca "color picker" en Google.</div>
+      </div>
+    </div>
+
+    <div id="colores-no" style="display:none">
+      <div class="field">
+        <label>¿Qué paleta va más con tu negocio?</label>
+        <div class="palette-grid">
+          <div class="palette-opt">
+            <input type="radio" name="paleta_sugerida" id="pal1" value="Oscuro premium — negro + dorado">
+            <label for="pal1">
+              <div class="palette-swatches">
+                <div class="swatch" style="background:#0a0f1e"></div>
+                <div class="swatch" style="background:#c9a84c"></div>
+                <div class="swatch" style="background:#ffffff"></div>
+              </div>
+              <div>
+                <div style="font-size:13px;font-weight:500">Oscuro premium</div>
+                <div style="font-size:11px;color:var(--muted)">Negro + dorado</div>
+              </div>
+            </label>
+          </div>
+          <div class="palette-opt">
+            <input type="radio" name="paleta_sugerida" id="pal2" value="Azul marino — confianza y profesional">
+            <label for="pal2">
+              <div class="palette-swatches">
+                <div class="swatch" style="background:#0d2240"></div>
+                <div class="swatch" style="background:#2563eb"></div>
+                <div class="swatch" style="background:#f0f4ff"></div>
+              </div>
+              <div>
+                <div style="font-size:13px;font-weight:500">Azul marino</div>
+                <div style="font-size:11px;color:var(--muted)">Confianza y profesional</div>
+              </div>
+            </label>
+          </div>
+          <div class="palette-opt">
+            <input type="radio" name="paleta_sugerida" id="pal3" value="Verde salvia — salud y bienestar">
+            <label for="pal3">
+              <div class="palette-swatches">
+                <div class="swatch" style="background:#f5f5ef"></div>
+                <div class="swatch" style="background:#4a7c59"></div>
+                <div class="swatch" style="background:#2d2d2d"></div>
+              </div>
+              <div>
+                <div style="font-size:13px;font-weight:500">Verde salvia</div>
+                <div style="font-size:11px;color:var(--muted)">Salud y bienestar</div>
+              </div>
+            </label>
+          </div>
+          <div class="palette-opt">
+            <input type="radio" name="paleta_sugerida" id="pal4" value="Rosa y nude — estética y feminidad">
+            <label for="pal4">
+              <div class="palette-swatches">
+                <div class="swatch" style="background:#fdf2f0"></div>
+                <div class="swatch" style="background:#c98a8a"></div>
+                <div class="swatch" style="background:#2d1f1f"></div>
+              </div>
+              <div>
+                <div style="font-size:13px;font-weight:500">Rosa y nude</div>
+                <div style="font-size:11px;color:var(--muted)">Estética y feminidad</div>
+              </div>
+            </label>
+          </div>
+          <div class="palette-opt">
+            <input type="radio" name="paleta_sugerida" id="pal5" value="Terracota — cálido y cercano">
+            <label for="pal5">
+              <div class="palette-swatches">
+                <div class="swatch" style="background:#fdf6f0"></div>
+                <div class="swatch" style="background:#c4622d"></div>
+                <div class="swatch" style="background:#2d1a0e"></div>
+              </div>
+              <div>
+                <div style="font-size:13px;font-weight:500">Terracota</div>
+                <div style="font-size:11px;color:var(--muted)">Cálido y cercano</div>
+              </div>
+            </label>
+          </div>
+          <div class="palette-opt">
+            <input type="radio" name="paleta_sugerida" id="pal6" value="Libre — que aura+ proponga">
+            <label for="pal6">
+              <div class="palette-swatches">
+                <div class="swatch" style="background:linear-gradient(135deg,#7b5cff,#e040fb);"></div>
+                <div class="swatch" style="background:#f5f5f5"></div>
+                <div class="swatch" style="background:#111"></div>
+              </div>
+              <div>
+                <div style="font-size:13px;font-weight:500">Libre</div>
+                <div style="font-size:11px;color:var(--muted)">Que aura+ proponga</div>
+              </div>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="field">
+      <label>¿Tienes logo? <span>(si sí, súbelo aquí)</span></label>
+      <div class="upload-area">
+        <input type="file" id="logo-file" accept="image/*,.pdf,.svg" onchange="showLogoName()">
+        <div class="upload-icon">🖼️</div>
+        <div class="upload-text">Arrastra tu logo aquí o <strong>haz clic para seleccionar</strong></div>
+        <div class="upload-text" style="margin-top:4px">JPG, PNG, SVG o PDF</div>
+        <div id="logo-name"></div>
+      </div>
+      <div class="hint">Si no tienes logo, escríbelo abajo y lo tomamos en cuenta para el diseño.</div>
+    </div>
+
+    <div class="field">
+      <label>¿Tienes logo? <span>(si no subiste archivo, indica aquí)</span></label>
+      <div class="options-grid">
+        <div class="opt"><input type="radio" name="logo_status" id="logo_si" value="Sí, adjunto arriba"><label for="logo_si">✅ Sí, adjunté arriba</label></div>
+        <div class="opt"><input type="radio" name="logo_status" id="logo_proceso" value="En proceso"><label for="logo_proceso">⏳ Lo estoy haciendo</label></div>
+        <div class="opt"><input type="radio" name="logo_status" id="logo_no" value="No tengo"><label for="logo_no">❌ No tengo</label></div>
+        <div class="opt"><input type="radio" name="logo_status" id="logo_despues" value="Lo mando después"><label for="logo_despues">📤 Lo mando después</label></div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>¿Tienes fotos profesionales tuyas o de tu espacio?</label>
+      <div class="options-grid">
+        <div class="opt"><input type="radio" name="fotos" id="fotos_si" value="Sí, las mando"><label for="fotos_si">📷 Sí, las mando</label></div>
+        <div class="opt"><input type="radio" name="fotos" id="fotos_no" value="No, usar placeholder"><label for="fotos_no">🖼️ No, usen placeholder</label></div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>¿Hay algún sitio web que te guste y quieras algo similar? <span>(opcional)</span></label>
+      <input type="url" id="referencia" placeholder="Ej: https://ejemplo.com — no importa el giro, solo el estilo">
+    </div>
+
+    <div class="nav-buttons">
+      <button class="btn-prev" onclick="prev()">← Atrás</button>
+      <button class="btn-next" onclick="next()">Siguiente →</button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════
+       BLOQUE 6 — COMUNICACIÓN
+  ══════════════════════════════════ -->
+  <div class="block" id="block-6">
+    <div class="block-header">
+      <div class="block-eyebrow">06 — Comunicación</div>
+      <div class="block-title">Tono y voz</div>
+      <div class="block-desc">Cómo va a sonar el texto de tu página.</div>
+    </div>
+
+    <div class="field">
+      <label>¿Cómo le hablas a tus clientes normalmente?</label>
+      <div class="options-grid">
+        <div class="opt">
+          <input type="radio" name="tuteo" id="tuteo_usted" value="De usted (formal)">
+          <label for="tuteo_usted">🎩 De usted<br><small style="color:var(--muted);font-size:11px">Formal</small></label>
+        </div>
+        <div class="opt">
+          <input type="radio" name="tuteo" id="tuteo_tu" value="De tú (cercano)">
+          <label for="tuteo_tu">👋 De tú<br><small style="color:var(--muted);font-size:11px">Cercano</small></label>
+        </div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>¿Tienes un slogan o frase que uses para tu negocio? <span>(opcional)</span></label>
+      <input type="text" id="slogan" placeholder="Ej: 'Tu problema, nuestra solución' — si no tienes, nosotros te proponemos uno">
+    </div>
+
+    <div class="field">
+      <label>¿Palabras o frases clave que quieras que aparezcan sí o sí? <span>(opcional)</span></label>
+      <textarea id="palabras_clave" placeholder="Ej: confidencialidad, resultados garantizados, primera consulta gratis, más de X años..."></textarea>
+    </div>
+
+    <div class="field">
+      <label>¿Hay algo que NO quieras que aparezca en tu página? <span>(colores, frases, imágenes, etc.)</span></label>
+      <textarea id="no_quiero" placeholder="Ej: No quiero fondos rojos, no quiero fotos de juzgados, no quiero el término 'barato'..."></textarea>
+    </div>
+
+    <div class="nav-buttons">
+      <button class="btn-prev" onclick="prev()">← Atrás</button>
+      <button class="btn-next" onclick="next()">Siguiente →</button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════
+       BLOQUE 7 — SECCIONES
+  ══════════════════════════════════ -->
+  <div class="block" id="block-7">
+    <div class="block-header">
+      <div class="block-eyebrow">07 — Secciones</div>
+      <div class="block-title">¿Qué quieres en tu página?</div>
+      <div class="block-desc">Selecciona las secciones que quieres incluir. Si tienes dudas, nosotros te recomendamos según tu giro.</div>
+    </div>
+
+    <div class="field">
+      <div class="options-grid cols-1">
+        <div class="opt"><input type="checkbox" id="sec_hero" value="Hero / Portada principal"><label for="sec_hero">🚀 Portada principal con tu especialidad</label></div>
+        <div class="opt"><input type="checkbox" id="sec_servicios" value="Servicios"><label for="sec_servicios">📋 Lista de servicios</label></div>
+        <div class="opt"><input type="checkbox" id="sec_sobre" value="Sobre mí / nosotros"><label for="sec_sobre">👤 Sobre mí o nuestra historia</label></div>
+        <div class="opt"><input type="checkbox" id="sec_stats" value="Estadísticas y logros"><label for="sec_stats">📊 Números y logros</label></div>
+        <div class="opt"><input type="checkbox" id="sec_proceso" value="Proceso de trabajo"><label for="sec_proceso">🔄 Cómo es trabajar conmigo (proceso)</label></div>
+        <div class="opt"><input type="checkbox" id="sec_testimonios" value="Testimonios"><label for="sec_testimonios">💬 Testimonios de clientes</label></div>
+        <div class="opt"><input type="checkbox" id="sec_faq" value="Preguntas frecuentes"><label for="sec_faq">❓ Preguntas frecuentes</label></div>
+        <div class="opt"><input type="checkbox" id="sec_contacto" value="Sección de contacto"><label for="sec_contacto">📬 Sección de contacto</label></div>
+        <div class="opt"><input type="checkbox" id="sec_footer" value="Footer con redes y datos"><label for="sec_footer">🔗 Footer con redes y datos</label></div>
+      </div>
+    </div>
+
+    <div class="nav-buttons">
+      <button class="btn-prev" onclick="prev()">← Atrás</button>
+      <button class="btn-next" onclick="next()">Siguiente →</button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════
+       BLOQUE 8 — FINAL
+  ══════════════════════════════════ -->
+  <div class="block" id="block-8">
+    <div class="block-header">
+      <div class="block-eyebrow">08 — Último paso</div>
+      <div class="block-title">Ya casi terminamos</div>
+      <div class="block-desc">Déjanos tus datos para enviarte la propuesta.</div>
+    </div>
+
+    <div class="field">
+      <label>¿Para cuándo necesitas tu página? <span>(opcional)</span></label>
+      <div class="options-grid">
+        <div class="opt"><input type="radio" name="urgencia" id="urg1" value="Lo antes posible"><label for="urg1">⚡ Lo antes posible</label></div>
+        <div class="opt"><input type="radio" name="urgencia" id="urg2" value="En 1-2 semanas"><label for="urg2">📅 1–2 semanas</label></div>
+        <div class="opt"><input type="radio" name="urgencia" id="urg3" value="En 1 mes"><label for="urg3">🗓️ En 1 mes</label></div>
+        <div class="opt"><input type="radio" name="urgencia" id="urg4" value="Sin prisa"><label for="urg4">😌 Sin prisa</label></div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>¿Algo más que quieras contarnos antes de empezar? <span>(opcional)</span></label>
+      <textarea id="notas_extra" placeholder="Cualquier duda, petición especial, o detalle que creas importante..."></textarea>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="field">
+      <label>Tu nombre completo</label>
+      <input type="text" id="contacto_nombre" placeholder="Nombre y apellido">
+    </div>
+
+    <div class="field">
+      <label>Tu WhatsApp <span>(para enviarte la propuesta)</span></label>
+      <input type="tel" id="contacto_wa" placeholder="Ej: 8112345678">
+    </div>
+
+    <div class="field">
+      <label>Correo electrónico <span>(opcional)</span></label>
+      <input type="email" id="contacto_correo" placeholder="tu@correo.com">
+    </div>
+
+    <div class="nav-buttons">
+      <button class="btn-prev" onclick="prev()">← Atrás</button>
+      <button class="btn-next" id="btn-submit" onclick="submit()">Enviar y recibir mi propuesta ✦</button>
+    </div>
+  </div>
+
+  <!-- SUCCESS -->
+  <div id="success">
+    <div class="success-icon">✦</div>
+    <div class="success-title">¡Brief recibido!</div>
+    <div class="success-desc">
+      Ya tenemos todo lo que necesitamos para preparar tu propuesta. Nos pondremos en contacto contigo en las próximas horas.
+    </div>
+    <a href="#" id="waLink" class="btn-wa" target="_blank">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      Confirmar por WhatsApp
+    </a>
+  </div>
+
+</div><!-- /wrap -->
+
+<script>
+  const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbykzp9pHWXQwT2Yah1LZiZHqZ-81DMa2Ba19Efsg1kXNEZIsbqyyUUYTMUcS15lEHAR3w/exec';
+  const AURA_WA = '524421234567'; // ← cambia por tu número de Aura+
+
+  let current = 1;
+  const total = 8;
+
+  function updateProgress() {
+    const pct = Math.round(((current - 1) / total) * 100);
+    document.getElementById('prog-fill').style.width = pct + '%';
+    document.getElementById('prog-label').innerHTML = `<strong>Bloque ${current} de ${total}</strong>`;
+    document.getElementById('prog-pct').textContent = pct + '%';
+  }
+
+  function next() {
+    document.getElementById('block-' + current).classList.remove('active');
+    current++;
+    document.getElementById('block-' + current).classList.add('active');
+    updateProgress();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function prev() {
+    document.getElementById('block-' + current).classList.remove('active');
+    current--;
+    document.getElementById('block-' + current).classList.add('active');
+    updateProgress();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function addServicio() {
+    const list = document.getElementById('servicios-list');
+    const item = document.createElement('div');
+    item.className = 'servicio-item';
+    item.innerHTML = `<input type="text" class="servicio-input" placeholder="Otro servicio...">
+                      <button class="btn-remove" onclick="this.parentElement.remove()">×</button>`;
+    list.appendChild(item);
+    item.querySelector('input').focus();
+  }
+
+  function toggleColores(tiene) {
+    document.getElementById('colores-si').style.display = tiene ? 'block' : 'none';
+    document.getElementById('colores-no').style.display = tiene ? 'none' : 'block';
+  }
+
+  function showLogoName() {
+    const file = document.getElementById('logo-file').files[0];
+    document.getElementById('logo-name').textContent = file ? '✓ ' + file.name : '';
+  }
+
+  function getChecked(name) {
+    return [...document.querySelectorAll(`input[name="${name}"]:checked`)].map(i => i.value).join(', ') || '—';
+  }
+
+  function getMultiCheck(ids) {
+    return ids.filter(id => document.getElementById(id)?.checked)
+              .map(id => document.getElementById(id).value)
+              .join(', ') || 'Ninguna';
+  }
+
+  function getSecciones() {
+    const ids = ['sec_hero','sec_servicios','sec_sobre','sec_stats','sec_proceso','sec_testimonios','sec_faq','sec_contacto','sec_footer'];
+    return getMultiCheck(ids);
+  }
+
+  function getRedes() {
+    const ids = ['rs_ig','rs_fb','rs_li','rs_tk','rs_yt','rs_none'];
+    return getMultiCheck(ids);
+  }
+
+  function getServicios() {
+    return [...document.querySelectorAll('.servicio-input')]
+      .map(i => i.value.trim()).filter(Boolean).join(' | ') || '—';
+  }
+
+  function val(id) {
+    return document.getElementById(id)?.value?.trim() || '—';
+  }
+
+  async function submit() {
+    const btn = document.getElementById('btn-submit');
+    btn.disabled = true;
+    btn.textContent = 'Enviando...';
+
+    const data = {
+      // Bloque 1
+      nombre_negocio: val('nombre_negocio'),
+      giro: val('giro'),
+      ciudad: val('ciudad'),
+      dominio: val('dominio'),
+      plan: getChecked('plan'),
+      // Bloque 2
+      servicios: getServicios(),
+      especialidad: val('especialidad'),
+      diferenciador: val('diferenciador'),
+      cliente_ideal: val('cliente_ideal'),
+      problema: val('problema'),
+      // Bloque 3
+      anos_exp: val('anos_exp'),
+      estadistica1: val('estadistica1'),
+      estadistica2: val('estadistica2'),
+      logros: val('logros'),
+      testimonios: val('testimonios'),
+      // Bloque 4
+      whatsapp: val('whatsapp'),
+      correo: val('correo'),
+      redes: getRedes(),
+      cta: getChecked('cta'),
+      // Bloque 5
+      tres_palabras: val('tres_palabras'),
+      modo: getChecked('modo'),
+      colores_hex: val('colores_hex'),
+      paleta_sugerida: getChecked('paleta_sugerida'),
+      logo_status: getChecked('logo_status'),
+      fotos: getChecked('fotos'),
+      referencia: val('referencia'),
+      // Bloque 6
+      tuteo: getChecked('tuteo'),
+      slogan: val('slogan'),
+      palabras_clave: val('palabras_clave'),
+      no_quiero: val('no_quiero'),
+      // Bloque 7
+      secciones: getSecciones(),
+      // Bloque 8
+      urgencia: getChecked('urgencia'),
+      notas_extra: val('notas_extra'),
+      contacto_nombre: val('contacto_nombre'),
+      contacto_wa: val('contacto_wa'),
+      contacto_correo: val('contacto_correo'),
+      timestamp: new Date().toLocaleString('es-MX')
+    };
+
+    // Enviar a Google Sheets
+    try {
+      await fetch(SHEETS_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+    } catch(e) { /* no-cors no devuelve respuesta */ }
+
+    // Mensaje WhatsApp para Aura+
+    const msg = `✦ *NUEVO BRIEF — AURA+*
+
+*Negocio:* ${data.nombre_negocio}
+*Giro:* ${data.giro}
+*Ciudad:* ${data.ciudad}
+*Plan:* ${data.plan}
+
+*Servicios:* ${data.servicios}
+*Especialidad:* ${data.especialidad}
+*Diferenciador:* ${data.diferenciador}
+
+*Cliente ideal:* ${data.cliente_ideal}
+*Problema que resuelve:* ${data.problema}
+
+*Años de experiencia:* ${data.anos_exp}
+*Estadística 1:* ${data.estadistica1}
+*Estadística 2:* ${data.estadistica2}
+*Logros:* ${data.logros}
+
+*WhatsApp negocio:* ${data.whatsapp}
+*Redes activas:* ${data.redes}
+*CTA preferido:* ${data.cta}
+
+*Estilo con 3 palabras:* ${data.tres_palabras}
+*Modo:* ${data.modo}
+*Colores:* ${data.colores_hex || data.paleta_sugerida}
+*Logo:* ${data.logo_status}
+*Fotos:* ${data.fotos}
+*Referencia:* ${data.referencia}
+
+*Tuteo:* ${data.tuteo}
+*Slogan:* ${data.slogan}
+*Palabras clave:* ${data.palabras_clave}
+*No quiere:* ${data.no_quiero}
+
+*Secciones:* ${data.secciones}
+*Urgencia:* ${data.urgencia}
+*Notas:* ${data.notas_extra}
+
+*Contacto:* ${data.contacto_nombre} — ${data.contacto_wa}
+*Correo:* ${data.contacto_correo}`;
+
+    // Mostrar éxito
+    document.querySelectorAll('.block').forEach(b => b.style.display = 'none');
+    document.querySelector('header').style.display = 'none';
+    document.getElementById('success').style.display = 'block';
+    document.getElementById('prog-fill').style.width = '100%';
+    document.getElementById('prog-label').innerHTML = '<strong>¡Completado!</strong>';
+    document.getElementById('prog-pct').textContent = '100%';
+
+    document.getElementById('waLink').href = `https://wa.me/${AURA_WA}?text=${encodeURIComponent(msg)}`;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  updateProgress();
+</script>
+</body>
+</html>
